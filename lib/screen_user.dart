@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:generalshops/screens/utilities/helperswidgets.dart';
 import 'package:generalshops/screens/utilities/size_config.dart';
 
 import 'api/user_Api.dart';
@@ -25,46 +26,70 @@ class _ProfilePagesState extends State<ProfilePages>
         elevation: 0.0,
         backgroundColor: Colors.grey.shade300,
       ),
-      body: FutureBuilder<List<User>>(
+      body: FutureBuilder(
         future: UserApi().fetchUser(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Center(
-              child: ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, int i) {
-                    //Text(snapshot.data[i].user_id);
-                    return Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              height: 400,
-                              width: double.infinity,
-                              margin: EdgeInsets.symmetric(horizontal: 10),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  textfield(
-                                    hintText: snapshot.data[i].first_name,
-                                  ),
-                                  textfield(
-                                    hintText: snapshot.data[i].last_name,
-                                  ),
-                                  textfield(
-                                    hintText: snapshot.data[i].mobile,
-                                  ),
-                                  textfield(
-                                    hintText: snapshot.data[i].city,
-                                  ),
-                                  textfield(
-                                    hintText: snapshot.data[i].address,
-                                  ),
+        builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              return _ShowUser(snapshot.data, context);
+              break;
+            case ConnectionState.waiting:
+              return loading();
+              break;
 
-                                  /* Container(
+            case ConnectionState.done:
+            case ConnectionState.active:
+              if (snapshot.hasError) {
+                return error(snapshot.error.toString());
+              } else {
+                if (!snapshot.hasData) {
+                  return error("لايوجد حساب");
+                } else {
+                  return _ShowUser(snapshot.data, context);
+                }
+              }
+              break;
+          }
+          return Container();
+        },
+      ),
+    );
+  }
+
+  Widget _ShowUser(List<User> users, BuildContext context) {
+    return Center(
+      child: ListView.builder(itemBuilder: (context, i) {
+        //Text(snapshot.data[i].user_id);
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  height: 400,
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      textfield(
+                        hintText: users[i].first_name,
+                      ),
+                      textfield(
+                        hintText: users[i].last_name,
+                      ),
+                      textfield(
+                        hintText: users[i].mobile,
+                      ),
+                      textfield(
+                        hintText: users[i].city,
+                      ),
+                      textfield(
+                        hintText: users[i].address,
+                      ),
+
+                      /* Container(
                       height: 55,
                       width: double.infinity,
                       child: RaisedButton(
@@ -81,53 +106,51 @@ class _ProfilePagesState extends State<ProfilePages>
                         ),
                       ),
                     ),*/
-                                ],
-                              ),
-                            ),
-                          ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            CustomPaint(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(0),
+                      child: Text(
+                        "الملف الشخصي",
+                        style: TextStyle(
+                          fontSize: 25,
+                          letterSpacing: 1.5,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
                         ),
-                        CustomPaint(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(0),
-                                  child: Text(
-                                    "حسابي",
-                                    style: TextStyle(
-                                      fontSize: 25,
-                                      letterSpacing: 1.5,
-                                      color: Colors.black54,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(10.0),
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  height: MediaQuery.of(context).size.width / 2,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.white, width: 5),
-                                    shape: BoxShape.circle,
-                                    color: Colors.white,
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: AssetImage(
-                                          'assets/images/onboarding2.jpg'),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          painter: HeaderCurvedContainer(),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(10.0),
+                      width: MediaQuery.of(context).size.width / 2.3,
+                      height: MediaQuery.of(context).size.width / 2.3,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 5),
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: AssetImage('assets/images/onboarding2.jpg'),
                         ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              painter: HeaderCurvedContainer(),
+            ),
 
-                        /*Padding(
+            /*Padding(
             padding: EdgeInsets.only(bottom: 270, left: 184),
             child: CircleAvatar(
               backgroundColor: Colors.black54,
@@ -140,22 +163,9 @@ class _ProfilePagesState extends State<ProfilePages>
               ),
             ),
           )*/
-                      ],
-                    );
-                  }),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                "لا يوجد إتصال ",
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              ),
-            );
-          }
-          return CircularProgressIndicator();
-        },
-      ),
+          ],
+        );
+      }),
     );
   }
 

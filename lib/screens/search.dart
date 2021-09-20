@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:generalshops/api/search_api.dart';
 import 'package:generalshops/product/product.dart';
 import 'package:generalshops/screens/single_product.dart';
+import 'package:generalshops/screens/utilities/helperswidgets.dart';
 import 'package:http/http.dart' as http;
 
 import '../animaterout.dart';
@@ -60,9 +61,7 @@ class _HomeSearchState extends State<HomeSearch> {
           if (!_isLoading) {
             return index == 0 ? _searchBar() : _ListItem(index - 1);
           } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return loading();
           }
         },
         itemCount: _productDisplay.length + 1,

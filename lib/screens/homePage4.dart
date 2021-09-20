@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:generalshops/api/helpers_api.dart';
 import 'package:generalshops/api/products_api.dart';
 import 'package:generalshops/product/product.dart';
@@ -10,6 +11,7 @@ import 'package:generalshops/screens/productView.dart';
 import 'package:generalshops/screens/search.dart';
 import 'package:generalshops/screens/showAllOrders.dart';
 import 'package:generalshops/screens/single_product.dart';
+import 'package:generalshops/screens/utilities/helperswidgets.dart';
 import 'package:generalshops/screens/utilities/size_config.dart';
 
 import '../animaterout.dart';
@@ -33,18 +35,25 @@ class _HomeViewState extends State<HomeView>
   ScreenConfig screenConfig;
   List<ProductCategory> names = List();
   List<Product> product = List();
+
   void initState() {
+    if (isLoading) return;
+    setState(() => isLoading = true);
+
     super.initState();
     HelpersApi().fetchCategories(1).then((dataFormServer) {
       setState(() {
         names = dataFormServer;
       });
     });
+    setState(() {});
     ProductsApi().fetchProducts(1).then((dataFormServer) {
       setState(() {
         product = dataFormServer;
       });
     });
+    Future.delayed(Duration(seconds: 5));
+    setState(() => isLoading = false);
   }
 
   @override
@@ -191,7 +200,34 @@ class _HomeViewState extends State<HomeView>
           padding: EdgeInsets.only(top: 5, left: 10, right: 10),
           child: Column(
             children: [
-              _searchesTextFormFild(),
+              FutureBuilder(
+                future: HelpersApi().fetchCategories(1),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<ProductCategory>> snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                      return _searchesTextFormFild();
+                      break;
+                    case ConnectionState.waiting:
+                      // return _showLoading();
+                      break;
+
+                    case ConnectionState.done:
+                    case ConnectionState.active:
+                      if (snapshot.hasError) {
+                        return error(snapshot.error.toString());
+                      } else {
+                        if (!snapshot.hasData) {
+                          return error("لا يوجد عروض");
+                        } else {
+                          return _searchesTextFormFild();
+                        }
+                      }
+                      break;
+                  }
+                  return Container();
+                },
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -223,7 +259,34 @@ class _HomeViewState extends State<HomeView>
               SizedBox(
                 height: 5,
               ),
-              _ListViewCategory(),
+              FutureBuilder(
+                future: HelpersApi().fetchCategories(1),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<ProductCategory>> snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                      return _ListViewCategory();
+                      break;
+                    case ConnectionState.waiting:
+                      return loading();
+                      break;
+
+                    case ConnectionState.done:
+                    case ConnectionState.active:
+                      if (snapshot.hasError) {
+                        return error(snapshot.error.toString());
+                      } else {
+                        if (!snapshot.hasData) {
+                          return error("لا يوجد عروض");
+                        } else {
+                          return _ListViewCategory();
+                        }
+                      }
+                      break;
+                  }
+                  return Container();
+                },
+              ),
               SizedBox(
                 height: 5,
               ),
@@ -255,7 +318,34 @@ class _HomeViewState extends State<HomeView>
               SizedBox(
                 height: 10,
               ),
-              _ListViewProducts(),
+              FutureBuilder(
+                future: ProductsApi().fetchProducts(1),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<Product>> snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                      return _ListViewProducts();
+                      break;
+                    case ConnectionState.waiting:
+                      // return loading();
+                      break;
+
+                    case ConnectionState.done:
+                    case ConnectionState.active:
+                      if (snapshot.hasError) {
+                        return error(snapshot.error.toString());
+                      } else {
+                        if (!snapshot.hasData) {
+                          return error("لا يوجد منتجات");
+                        } else {
+                          return _ListViewProducts();
+                        }
+                      }
+                      break;
+                  }
+                  return Container();
+                },
+              ),
             ],
           ),
         ),
@@ -354,8 +444,11 @@ class _HomeViewState extends State<HomeView>
   }
 
   Widget _ListViewProducts() {
+    //if (isLoading) return;
+
     Size size = MediaQuery.of(context).size;
     double height = MediaQuery.of(context).size.height;
+
     return Container(
       height: height / 4,
       child: ListView.separated(
@@ -417,6 +510,7 @@ class _HomeViewState extends State<HomeView>
                           fontSize: 13),
                     ),
                   ),
+
                   /* SizedBox(
                   height: 5,
                 ),
@@ -453,10 +547,16 @@ class _HomeViewState extends State<HomeView>
   }
 
   Widget _showLoading() {
-    return Container(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
+    return SpinKitCubeGrid(
+      size: 90,
+      itemBuilder: (context, index) {
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: index.isEven ? Colors.red : Colors.green,
+          ),
+        );
+      },
     );
   }
 
