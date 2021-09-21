@@ -85,6 +85,7 @@ class ProductsApi {
       String url = ApiUtl.PRODUCTS + '?page=' + page.toString();
       http.Response response = await http.get(Uri.parse(url), headers: headers);
       print("URL: HTI");
+
       List<Product> products = [];
       if (response.statusCode == 200) {
         APICacheDBModel cacheDBModel =
@@ -92,8 +93,8 @@ class ProductsApi {
         await APICacheManager().addCacheData(cacheDBModel);
         // print(response.statusCode);
         var body = jsonDecode(response.body);
+        // print(body);
         for (var item in body['data']) {
-          //  print(item);
           products.add(Product.fromJson(item));
         }
         return products;

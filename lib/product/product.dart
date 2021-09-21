@@ -16,6 +16,10 @@ class Product {
   List<ProductTag> tags;
   List<String> images;
   List<ProductReview> review;
+  //List<String> options;
+  List<Map<String, dynamic>> options;
+  // Map<String, dynamic> options = [];
+  // List<dynamic> userFriendList = [];
 
   Product(
       this.product_id,
@@ -29,7 +33,8 @@ class Product {
       this.infoShop,
       this.tags,
       this.images,
-      this.review);
+      this.review,
+      this.options);
 
   Product.fromJson(Map<String, dynamic> jsonObject) {
     if (jsonObject['product_id'] == null) {
@@ -50,6 +55,7 @@ class Product {
     if (jsonObject['product_discount'] == null) {
       throw PropertyIsRequired('Product Discount');
     }
+
     /* if (jsonObject['product_category'] == null) {
       throw PropertyIsRequired('Product Category');
     }*/
@@ -75,6 +81,10 @@ class Product {
     if (jsonObject['product_tag'] != null) {
       _setTags(jsonObject['product_tag']);
     }
+    /* this.options = [];
+    if (jsonObject['options'] != null) {
+      _setOption(jsonObject['options']);
+    }*/
 
     if (jsonObject['product_unit'] != null) {
       this.productUnit = ProductUnit.fromJson(jsonObject['product_unit']);
@@ -85,6 +95,11 @@ class Product {
     if (jsonObject['product_image'] != null) {
       _setImages(jsonObject['product_image']);
     }
+
+    this.options = [];
+    var items = jsonObject['options'];
+
+    print(items);
 
     this.review = [];
     if (jsonObject['product_review'] != null) {
@@ -117,6 +132,7 @@ class Product {
       for (var image in jsonImages) {
         if (image != null) {
           this.images.add(image['image_url']);
+          print(image);
         }
       }
     }

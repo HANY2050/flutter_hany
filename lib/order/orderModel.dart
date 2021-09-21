@@ -104,6 +104,7 @@ class Order {
 
     for (var item in items) {
       cartItems.add(CartItem.fromJson(item));
+      print(item);
     }
 
     this.id = jsonObject['id'];

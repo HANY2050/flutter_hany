@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:generalshops/api/cart_api.dart';
-import 'package:generalshops/cart/cart.dart';
 import 'package:generalshops/modelcart1/cart1.dart';
 import 'package:generalshops/product/product.dart';
 import 'package:generalshops/screens/screen_login_sigin.dart';
@@ -21,6 +20,7 @@ class SingleProduct extends StatefulWidget {
   final Product product;
 
   SingleProduct(this.product);
+
   @override
   _SingleProductState createState() => _SingleProductState();
 }
@@ -140,7 +140,6 @@ class _SingleProductState extends State<SingleProduct> {
   }
 
   Widget _drawTitle(BuildContext context) {
-    List<CartItem> cartItems;
     return Container(
       padding: EdgeInsets.only(
         top: 16,
@@ -174,6 +173,7 @@ class _SingleProductState extends State<SingleProduct> {
                 SizedBox(
                   height: 16,
                 ),
+
                 /*  Text(
                   widget.product.productCategory.category_name,
                   style: Theme.of(context).textTheme.subhead,

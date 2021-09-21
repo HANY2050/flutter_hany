@@ -12,6 +12,18 @@ class CartItem {
   }
 }
 
+class Option {
+  //String options;
+
+  List<dynamic> options = [];
+  Option(this.options);
+  Option.fromJson(Map<String, dynamic> jsonObject) {
+    this.options = jsonObject['options'];
+
+    // this.qty = double.tryParse(jsonObject['qty']);
+  }
+}
+
 class Cart {
   List<CartItem> cartItems;
 

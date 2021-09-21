@@ -3,6 +3,7 @@ import 'package:generalshops/api/order_api.dart';
 import 'package:generalshops/cart/cart.dart';
 import 'package:generalshops/order/orderModel.dart';
 import 'package:generalshops/product/product.dart';
+import 'package:generalshops/screens/utilities/helperswidgets.dart';
 
 class OrdersAll extends StatefulWidget {
   final drive = 1500;
@@ -280,7 +281,7 @@ class _OrdersAllState extends State<OrdersAll>
               ),
             );
           }
-          return CircularProgressIndicator();
+          return loading();
         },
       ),
       /*body: FutureBuilder<List<Cart>>(
