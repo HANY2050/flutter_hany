@@ -8,6 +8,7 @@ import 'package:generalshops/screens/utilities/screen_utilities.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../ScreenSizeColor.dart';
 import 'cart_screen.dart';
 
 void main() {
@@ -26,6 +27,7 @@ class SingleProduct extends StatefulWidget {
 }
 
 class _SingleProductState extends State<SingleProduct> {
+  int _value = 1;
   CartApi cartApi = CartApi();
   bool _addingToCart = false;
   bool _addingToFavorite = false;
@@ -82,6 +84,12 @@ class _SingleProductState extends State<SingleProduct> {
           if (userId == null) {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => HomePage2()));
+          } else if (widget.product.size1 != '0' &&
+              widget.product.color1 != '0') {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SizeColor(widget.product)));
           } else {
             setState(() {
               _addingToCart = true;
@@ -159,6 +167,10 @@ class _SingleProductState extends State<SingleProduct> {
                   widget.product.product_title,
                   style: Theme.of(context).textTheme.headline,
                 ),
+                Text(
+                  widget.product.size1,
+                  style: Theme.of(context).textTheme.headline,
+                ),
                 SizedBox(
                   height: 16,
                 ),
@@ -173,6 +185,201 @@ class _SingleProductState extends State<SingleProduct> {
                 SizedBox(
                   height: 16,
                 ),
+                /*  Padding(
+                  padding: EdgeInsets.only(right: 30),
+                  child: Row(
+                    children: [
+                      Card(
+                        child: Container(
+                          width: 120,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              (widget.product.size1 != "0")
+                                  ? RadioListTile(
+                                      value: 1,
+                                      groupValue: _value,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _value = val;
+                                        });
+                                      },
+                                      title: Text(
+                                        widget.product.size1,
+                                        style:
+                                            Theme.of(context).textTheme.subhead,
+                                      ),
+                                    )
+                                  : Container(),
+                              (widget.product.size2 != "0")
+                                  ? RadioListTile(
+                                      value: 2,
+                                      groupValue: _value,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _value = val;
+                                        });
+                                      },
+                                      title: Flexible(
+                                        child: Text(
+                                          widget.product.size2,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subhead,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
+                              (widget.product.size3 != "0")
+                                  ? RadioListTile(
+                                      value: 3,
+                                      groupValue: _value,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _value = val;
+                                        });
+                                      },
+                                      title: Text(
+                                        widget.product.size3,
+                                        style:
+                                            Theme.of(context).textTheme.subhead,
+                                      ),
+                                    )
+                                  : Container(),
+                              (widget.product.size4 != "0")
+                                  ? RadioListTile(
+                                      value: 4,
+                                      groupValue: _value,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _value = val;
+                                        });
+                                      },
+                                      title: Text(
+                                        widget.product.size4,
+                                        style:
+                                            Theme.of(context).textTheme.subhead,
+                                      ),
+                                    )
+                                  : Container(),
+                              (widget.product.size5 != "0")
+                                  ? RadioListTile(
+                                      value: 5,
+                                      groupValue: _value,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _value = val;
+                                        });
+                                      },
+                                      title: Text(
+                                        widget.product.size5,
+                                        style:
+                                            Theme.of(context).textTheme.subhead,
+                                      ),
+                                    )
+                                  : Container(),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Card(
+                        child: Container(
+                          width: 120,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              (widget.product.size1 != "0")
+                                  ? RadioListTile(
+                                      value: 1,
+                                      groupValue: _value,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _value = val;
+                                        });
+                                      },
+                                      title: Text(
+                                        widget.product.size1,
+                                        style:
+                                            Theme.of(context).textTheme.subhead,
+                                      ),
+                                    )
+                                  : Container(),
+                              (widget.product.size2 != "0")
+                                  ? RadioListTile(
+                                      value: 2,
+                                      groupValue: _value,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _value = val;
+                                        });
+                                      },
+                                      title: Flexible(
+                                        child: Text(
+                                          widget.product.size2,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subhead,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
+                              (widget.product.size3 != "0")
+                                  ? RadioListTile(
+                                      value: 3,
+                                      groupValue: _value,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _value = val;
+                                        });
+                                      },
+                                      title: Text(
+                                        widget.product.size3,
+                                        style:
+                                            Theme.of(context).textTheme.subhead,
+                                      ),
+                                    )
+                                  : Container(),
+                              (widget.product.size4 != "0")
+                                  ? RadioListTile(
+                                      value: 4,
+                                      groupValue: _value,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _value = val;
+                                        });
+                                      },
+                                      title: Text(
+                                        widget.product.size4,
+                                        style:
+                                            Theme.of(context).textTheme.subhead,
+                                      ),
+                                    )
+                                  : Container(),
+                              (widget.product.size5 != "0")
+                                  ? RadioListTile(
+                                      value: 5,
+                                      groupValue: _value,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _value = val;
+                                        });
+                                      },
+                                      title: Text(
+                                        widget.product.size5,
+                                        style:
+                                            Theme.of(context).textTheme.subhead,
+                                      ),
+                                    )
+                                  : Container(),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),*/
 
                 /*  Text(
                   widget.product.productCategory.category_name,
@@ -222,6 +429,13 @@ class _SingleProductState extends State<SingleProduct> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => HomePage2()));
+                      } else if (widget.product.size1 != '0' &&
+                          widget.product.color1 != '0') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    SizeColor(widget.product)));
                       } else {
                         setState(() {
                           _addingToFavorite = true;
